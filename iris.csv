@@ -149,3 +149,4 @@ sepal.length,sepal.width,petal.length,petal.width,variety
 6.5,3,5.2,2,"Virginica"
 6.2,3.4,5.4,2.3,"Virginica"
 5.9,3,5.1,1.8,"Virginica"
+6.2,3,4.8,2,"Virginica"
