@@ -9,6 +9,8 @@ jobs:
   train:
     name: Train Model
     runs-on: self-hosted
+    env:
+      PATH: /home/simplefuturistic/miniconda3/bin:$PATH
 
     steps:
       - name: Checkout Repository
@@ -16,7 +18,6 @@ jobs:
 
       - name: Use existing Python
         run: |
-          source /home/simplefuturistic/miniconda3/bin/activate
           echo "Using Python from the current environment"
           python --version
           pip --version
