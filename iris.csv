@@ -158,3 +158,4 @@ sepal.length,sepal.width,petal.length,petal.width,variety
 6.2,2.8,4.8,1.8,"Virginica"
 4.9,3.1,1.5,.2,"Setosa"
 6.7,3,5,1.7,"Versicolor"
+5.8,2.7,4.1,1,"Versicolor"
