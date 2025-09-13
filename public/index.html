@@ -1,0 +1,212 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Model Predictor</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 640px;
+      margin: 40px auto;
+      line-height: 1.5;
+      background: linear-gradient(135deg, #3498db, #f1c40f);
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      color: #2c3e50;
+      padding: 20px;
+      border-radius: 12px;
+    }
+
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    button {
+      padding: 10px 16px;
+      font-size: 16px;
+      background: #2c3e50;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #1a242f;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.9);
+      padding: 16px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      margin-top: 20px;
+    }
+
+    .prediction {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    canvas {
+      margin-top: 10px;
+    }
+
+    footer {
+      margin-top: 40px;
+      font-size: 13px;
+      text-align: center;
+      color: #fff;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+  <h1>🌸 Iris Predictor</h1>
+  <p>Enter features as comma-separated numbers<br>
+    <small>(example for <em>setosa</em>: <code>5.1,3.5,1.4,0.2</code>)</small>
+  </p>
+  <input id="features" placeholder="e.g. 5.1,3.5,1.4,0.2" />
+  <button id="submit">Predict</button>
+
+  <div id="output" class="card" style="display:none;">
+    <div class="prediction" id="pred-label">No prediction yet.</div>
+    <canvas id="prob-chart"></canvas>
+  </div>
+
+  <div id="error-box" class="card" style="display:none; background-color: rgba(255, 0, 0, 0.1); color: #c00;">
+  </div>
+
+  <footer>
+    Made by <strong>Eleazar Tadeo Eman</strong>
+  </footer>
+
+  <script>
+    const elFeatures = document.getElementById('features');
+    const btn = document.getElementById('submit');
+    const outBox = document.getElementById('output');
+    const predLabel = document.getElementById('pred-label');
+    const errorBox = document.getElementById('error-box');
+    const ctx = document.getElementById('prob-chart').getContext('2d');
+    let chart = null;
+
+    // fallback labels for Iris dataset
+    const fallbackLabels = ["setosa", "versicolor", "virginica"];
+
+    btn.addEventListener('click', async () => {
+      const raw = elFeatures.value.trim();
+      errorBox.style.display = 'none';  // hide error initially
+      errorBox.textContent = '';
+
+      if (!raw) {
+        predLabel.textContent = 'Please enter features';
+        outBox.style.display = 'none';
+        return;
+      }
+
+      // split by comma and trim each part
+      const parts = raw.split(',').map(s => s.trim());
+
+      // check that all are valid numbers
+      if (parts.length === 0 || parts.some(s => s === '' || isNaN(Number(s)))) {
+        errorBox.textContent = 'Invalid numbers: all entries must be numeric';
+        errorBox.style.display = 'block';
+        outBox.style.display = 'none';
+        return;
+      }
+
+      // convert to float
+      const features = parts.map(Number);
+
+      btn.disabled = true;
+      btn.style.opacity = 0.6;
+
+      predLabel.textContent = 'Loading...';
+      outBox.style.display = 'block';
+
+      try {
+        const res = await fetch('/predict', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ features: parts })
+        });
+
+        const j = await res.json();
+
+        // show backend error if present
+        if (j.error) {
+          throw new Error(j.error + (j.details ? `: ${j.details}` : ''));
+        }
+
+        // prediction
+        const pred = j.predicted_class || (j.class_labels ? j.class_labels[0] : j.prediction[0]);
+        predLabel.textContent = `Predicted Class: ${pred}`;
+
+        // probabilities as dictionary or array
+        if (j.probabilities) {
+          let labels = fallbackLabels;
+          let probs = [];
+
+          if (Array.isArray(j.probabilities[0])) {
+            probs = j.probabilities[0];
+            labels = j.class_labels || fallbackLabels.slice(0, probs.length);
+          } else {
+            labels = Object.keys(j.probabilities);
+            probs = Object.values(j.probabilities);
+          }
+
+          if (chart) chart.destroy();
+          chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: labels,
+              datasets: [{
+                label: 'Prediction Probability',
+                data: probs,
+                backgroundColor: [
+                  'rgba(52, 152, 219, 0.7)',
+                  'rgba(241, 196, 15, 0.7)',
+                  'rgba(46, 204, 113, 0.7)'
+                ]
+              }]
+            },
+            options: {
+              responsive: true,
+              plugins: {
+                legend: { display: false },
+                tooltip: { callbacks: { label: ctx => (ctx.parsed.y * 100).toFixed(2) + '%' } }
+              },
+              scales: {
+                y: { beginAtZero: true, max: 1, ticks: { callback: v => (v * 100) + "%" } }
+              }
+            }
+          });
+        }
+
+      } catch (e) {
+        // show error in the error container
+        errorBox.textContent = 'Error: ' + e.message;
+        errorBox.style.display = 'block';
+        outBox.style.display = 'none';
+        if (chart) { chart.destroy(); chart = null; }
+      } finally {
+        btn.disabled = false;
+        btn.style.opacity = 1;
+      }
+    });
+  </script>
+
+</body>
+
+</html>

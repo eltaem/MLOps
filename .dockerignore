@@ -1,0 +1,8 @@
+__pycache__
+.pytest_cache
+.git
+*.pyc
+venv
+node_modules
+*.tar
+*.zip
