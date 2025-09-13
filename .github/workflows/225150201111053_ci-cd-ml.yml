@@ -16,6 +16,7 @@ jobs:
 
       - name: Use existing Python
         run: |
+          export PATH=/home/simplefuturistic/miniconda3/bin:$PATH
           echo "Using Python from the current environment"
           python --version
           pip --version
