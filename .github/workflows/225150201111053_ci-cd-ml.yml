@@ -26,10 +26,6 @@ jobs:
         run: |
           $PYTHON_PATH -m pip install --upgrade pip
           $PYTHON_PATH -m pip install -r requirements.txt
-        
-      - name: Push dataset with DVC
-        run: |
-          dvc push
 
       - name: Pull dataset with DVC
         run: |
