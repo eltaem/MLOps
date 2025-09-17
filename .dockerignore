@@ -1,36 +1,32 @@
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtual environments
+.venv/
+env/
+venv/
+
+# Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# DVC cache & temp
+.dvc/cache/
+.dvc/tmp/
+
 # Git
 .git
 .gitignore
 
-# DVC cache & lock
-.dvc/cache
-.dvc/tmp
-*.dvc.lock
-
-# Dataset lokal (biar nggak kebawa ke image)
+# Data artifacts (biar image ringan, dataset jangan ikut masuk)
 *.csv
 *.tsv
 *.parquet
-*.jsonl
-data/
-datasets/
-raw_data/
 
-# Python env
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
+# Training outputs (opsional, kalau gak mau bawa semua)
+# kecuali model_and_encoder.joblib yang memang kamu COPY manual
 *.pkl
-*.joblib
-
-# Virtual environments
-.venv
-venv/
-env/
-*.egg-info
-.eggs
-
-# OS junk
-.DS_Store
-Thumbs.db
+*.h5
