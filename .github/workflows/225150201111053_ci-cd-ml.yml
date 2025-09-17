@@ -27,6 +27,11 @@ jobs:
           $PYTHON_PATH -m pip install --upgrade pip
           $PYTHON_PATH -m pip install -r requirements.txt
 
+      - name: Pull dataset with DVC
+        run: |
+          dvc pull
+          test -f iris.csv || (echo "Dataset not found!" && exit 1)
+
       - name: Train Model
         run: |
           $PYTHON_PATH train.py
