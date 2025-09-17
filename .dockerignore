@@ -1,8 +1,36 @@
-__pycache__
-.pytest_cache
+# Git
 .git
+.gitignore
+
+# DVC cache & lock
+.dvc/cache
+.dvc/tmp
+*.dvc.lock
+
+# Dataset lokal (biar nggak kebawa ke image)
+*.csv
+*.tsv
+*.parquet
+*.jsonl
+data/
+datasets/
+raw_data/
+
+# Python env
+__pycache__/
 *.pyc
-venv
-node_modules
-*.tar
-*.zip
+*.pyo
+*.pyd
+*.pkl
+*.joblib
+
+# Virtual environments
+.venv
+venv/
+env/
+*.egg-info
+.eggs
+
+# OS junk
+.DS_Store
+Thumbs.db
