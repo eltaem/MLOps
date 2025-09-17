@@ -26,7 +26,6 @@ yarn-error.log
 *.tsv
 *.parquet
 
-# Training outputs (opsional, kalau gak mau bawa semua)
-# kecuali model_and_encoder.joblib yang memang kamu COPY manual
+# Training outputs
 *.pkl
 *.h5
