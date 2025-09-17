@@ -2,7 +2,7 @@
 # Stage 1: build Node dependencies
 FROM node:18-slim AS node-build
 WORKDIR /app
-COPY serve_requirements.txt package*.json ./
+COPY package*.json ./
 RUN npm ci --omit=dev
 
 # Stage 2: runtime
@@ -16,6 +16,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 WORKDIR /app
 
 # Install Python dependencies
+COPY serve_requirements.txt ./
 RUN pip install --no-cache-dir -r serve_requirements.txt
 
 # Copy Node runtime deps from builder
