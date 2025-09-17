@@ -28,6 +28,7 @@ COPY --from=node-build /app/package*.json ./
 # Copy only necessary source files (not the whole repo)
 COPY server.js ./
 COPY public/ ./public/
+COPY predict.py ./
 COPY model_and_encoder.joblib /app/model_and_encoder.joblib
 
 EXPOSE 3000
