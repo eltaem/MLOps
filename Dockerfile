@@ -29,7 +29,7 @@ COPY --from=node-build /app/package*.json ./
 COPY server.js ./
 COPY public/ ./public/
 COPY predict.py ./
-COPY model_and_encoder.joblib /app/model_and_encoder.joblib
+COPY model_and_encoder.joblib ./model_and_encoder.joblib
 
 EXPOSE 3000
 CMD ["node", "server.js"]
