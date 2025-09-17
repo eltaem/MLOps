@@ -3,7 +3,7 @@
 FROM node:18-slim AS node-build
 WORKDIR /app
 COPY package*.json ./
-RUN npm ci --omit=dev
+RUN npm install --omit=dev
 
 # Stage 2: runtime
 FROM python:3.11-slim
