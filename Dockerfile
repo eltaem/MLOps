@@ -17,7 +17,7 @@ WORKDIR /app
 
 # Install Python dependencies
 COPY serve_requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r serve_requirements.txt
 
 # Copy Node runtime deps from builder
 COPY --from=node-build /app/node_modules ./node_modules
