@@ -3,7 +3,7 @@ name: CI/CD ML - Iris Model via Notebook
 on:
   push:
     paths:
-      - 'iris.csv' 
+      - 'iris.csv.dvc' 
 
 jobs:
   train:

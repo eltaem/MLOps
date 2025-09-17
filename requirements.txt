@@ -3,3 +3,5 @@ pandas
 joblib
 xgboost
 numpy
+mlflow
+dvc
