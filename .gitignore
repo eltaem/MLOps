@@ -5,3 +5,4 @@ __pycache__/*
 .env
 /iris.csv
 *.ipynb
+/iris-app.tar

@@ -8,9 +8,11 @@ RUN npm install --omit=dev
 # Stage 2: runtime
 FROM python:3.11-slim
 
-# Install minimal OS deps
+# Install minimal OS deps + Node.js
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    ca-certificates \
+    ca-certificates curl \
+ && curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+ && apt-get install -y nodejs \
  && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
