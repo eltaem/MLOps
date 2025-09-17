@@ -1,0 +1,6 @@
+mlruns/*
+node_modules/*
+__pycache__/*
+*.pyc
+.env
+/iris.csv
