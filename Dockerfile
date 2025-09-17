@@ -2,7 +2,7 @@
 # Stage 1: build Node dependencies
 FROM node:18-slim AS node-build
 WORKDIR /app
-COPY serve_requirements package*.json ./
+COPY serve_requirements.txt package*.json ./
 RUN npm ci --omit=dev
 
 # Stage 2: runtime
